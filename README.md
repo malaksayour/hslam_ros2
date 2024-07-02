@@ -22,7 +22,7 @@ Please cite the paper if used in an academic context.
 ## Project Description
 
 The FSLAM project is an implementation of a visual simultaneous localization and mapping algorithm. 
-It utilizes the ROS (Robot Operating System) Noetic and is designed for Ubuntu 20.04.
+It utilizes the ROS 2 (Robot Operating System) foxy and is designed for Ubuntu 20.04.
 
 
 
