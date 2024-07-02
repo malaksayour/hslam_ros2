@@ -1,0 +1,13 @@
+hslam_live:
+  ros__parameters:
+    calibFile : "/home/user/catkin_ws/src/res/camera.txt"
+    vignetteFile : ""
+    gammaFile : ""
+    saveFile : ""
+    vocabPath : ""
+    useSampleOutput: false
+    mode : 1
+    preset: 0
+    quiet: false
+    loopClosure: false
+    noLog: false
