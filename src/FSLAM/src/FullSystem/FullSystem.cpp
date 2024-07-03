@@ -1923,10 +1923,10 @@ std::vector<Eigen::Vector3f> FullSystem::getMap()
 
 void FullSystem::blockUntilLoopIsFinished()
 {	
-	// boost::unique_lock<boost::mutex> lock(trackMapSyncMutex);
-	// runMapping = false;
-	// trackedFrameSignal.notify_all();
-	// lock.unlock();
+	boost::unique_lock<boost::mutex> lock(trackMapSyncMutex);
+	runMapping = false;
+	trackedFrameSignal.notify_all();
+	lock.unlock();
 
 	if (loopCloser)
 	{
@@ -1936,5 +1936,26 @@ void FullSystem::blockUntilLoopIsFinished()
 
 }
 
+
+void FullSystem::BAatExit()
+{
+	std::vector<std::shared_ptr<Frame>> allKFrames;
+	std::vector<std::shared_ptr<MapPoint>> allMapPoints;
+
+	globalMap->GetAllKeyFrames(allKFrames);
+	globalMap->GetAllMapPoints(allMapPoints);
+
+
+	bool stopGBA = false;
+
+	size_t currMaxKF = allKeyFramesHistory.back()->KfId;
+	size_t currMaxMp = globalMap->GetMaxMPid();
+
+	BundleAdjustment(allKFrames, allMapPoints, 10, &stopGBA, true, true, currMaxKF, currMaxKF - 15, currMaxMp);
+	for (auto it : allKeyFramesHistory)
+	    it->setRefresh(true);
 }
+
+}
+
 

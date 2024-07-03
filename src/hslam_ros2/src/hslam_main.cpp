@@ -41,10 +41,15 @@
 using namespace std::chrono_literals;
 using namespace HSLAM;
 
+std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor;
+
+
 void interruptHandler(int signal)
 {
-		printf("Caught signal %d\n",signal);
-		exit(1);
+		if(executor){
+			std::cout<<"exiting"<<std::endl;
+			executor->cancel();}
+		//exit(1);
 }
 
 class HslamSystem : public rclcpp::Node
@@ -54,8 +59,7 @@ class HslamSystem : public rclcpp::Node
 	//std::shared_ptr<LoopCloser> loopCloser;
 	rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr img_sub;
 	rclcpp::Subscription<std_msgs::msg::Int16>::SharedPtr map_sub;
-
-
+	
     HslamSystem() : Node("HslamSystem")
     {
 		//init params
@@ -105,8 +109,16 @@ class HslamSystem : public rclcpp::Node
     }
 
 	~HslamSystem(){
+		for(IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper)
+		{
+			//printf("DELETE VIEWER IO wrapper\n");
+			ow->join();
+			delete ow;
+		}
 		delete fullSystem;
+		delete undistorter_;
 	}
+	
 	void resetFullSystem(){
 		std::vector<IOWrap::Output3DWrapper*> wraps = fullSystem->outputWrapper;
 		for(IOWrap::Output3DWrapper* ow : wraps) ow->reset();
@@ -223,8 +235,7 @@ class HslamSystem : public rclcpp::Node
 		map.header.frame_id="map";
 		map_pub_->publish(map);
 		
-		}
-
+	}
 
   private:
     std::string map_topic_;
@@ -361,59 +372,29 @@ int main( int argc, char ** argv){
 	//boost::thread exThread = boost::thread(exitThread); // hook crtl+C.
 
 	rclcpp::init(argc, argv);
-  	rclcpp::executors::MultiThreadedExecutor executor;
 	
 	auto sharedHslamNode=  std::make_shared<HslamSystem>();
+  	executor = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
 
 
-	executor.add_node(sharedHslamNode);
+	executor->add_node(sharedHslamNode);
 
 	sharedHslamNode->initializeSubscribers();
 	signal(SIGINT, interruptHandler);
 
-	executor.spin();
-
-	// while (rclcpp::ok() && !interrupted) //&& frame_id_ <999999 NA
-	// {	
-	// 	executor.spin_once();
-
-	// 	if(viewer!=0 && viewer->isDead)
-	// 		break;
-
-	// 	if(sharedHslamNode->fullSystem->isLost)
-	// 	{
-	// 		printf("LOST!!\n");
-	// 		break;
-	// 	}
-
-	// 	if(sharedHslamNode->fullSystem->initFailed || setting_fullResetRequested)
-	// 	{
-	// 		std::cout << "exit" <<std::endl;
-	// 		sharedHslamNode->resetFullSystem();
-	// 	}
-		
-	// }
+	executor->spin();
 
 
+	sharedHslamNode->fullSystem->blockUntilLoopIsFinished();
 
-	// fullSystem->blockUntilMappingIsFinished();
-
-	// printf("fslam_ros main cpp has been interuppted.\n"); //debug NA
-	// rclcpp::shutdown();
-	// fullSystem->BAatExit();
+	printf("fslam_ros main cpp has been interuppted.\n"); //debug NA
+	sharedHslamNode->fullSystem->BAatExit();
 			
 	
-	// fullSystem->printResult("result.txt"); 
-	// //if(viewer != 0)
-	// //    viewer->run();
-	// //Clean-up and exit
-
-	// printf("DELETE FULLSYSTEM!\n");
-	// delete fullSystem;
-	//printf("DELETE Undistorter\n");
-	//delete undistorter;
+	sharedHslamNode->fullSystem->printResult("result.txt"); 
+	
 	printf("EXIT NOW\n");
+	rclcpp::shutdown();
 	return 0;
-
 
 }

@@ -159,7 +159,7 @@ public:
 	EnergyFunctional* ef;
 	std::vector<FrameShell*> allKeyFramesHistory;
 	boost::mutex trackMutex;
-	//void BAatExit();
+	void BAatExit();
 
 	//new mapping
 	bool runMapping;
