@@ -2,7 +2,7 @@
 
 HSLAM (Hybrid Simultaneous Localization and Mapping) Project.
 
-A containerized "ready-to-use" SLAM application that leverages both direct and indirect methods.
+A SLAM application that leverages both direct and indirect methods.
 
 ### Related Publications:
 [HSLAM]Younes, G. (2021). A Unified Hybrid Formulation for Visual SLAM (Doctoral dissertation).
@@ -21,14 +21,14 @@ Please cite the paper if used in an academic context.
 
 ## Project Description
 
-The FSLAM project is an implementation of a visual simultaneous localization and mapping algorithm. 
+The HSLAM project is an implementation of a visual simultaneous localization and mapping algorithm. 
 It utilizes the ROS 2 (Robot Operating System) foxy and is designed for Ubuntu 20.04.
 
 
 
 ## Installation
 
-To use this Dockerfile and build the FSLAM project, follow these steps:
+To build the HSLAM project, follow these steps:
 
 1. Clone the Repo.
 2. Change the workspace name to hslam_ws.
@@ -75,7 +75,7 @@ wget ceres-solver.org/ceres-solver-1.14.0.tar.gz \
 
 ## Usage
 
-To run the FSLAM run:
+To run the HSLAM run:
 1. In the first terminal run the following command to open a camera stream through ROS and publish the camera's images unto a ROS topic:
 ``` bash
     ros2 launch realsense2_camera rs_launch.py
@@ -90,7 +90,7 @@ Start moving the camera/computer around and perform SLAM.
 ## Features
 
 - Utilizes the FSLAM algorithm for simultaneous localization and mapping.
-- Integrates with ROS Noetic and utilizes various ROS functionalities.
+- Integrates with ROS Foxy and utilizes various ROS functionalities.
 - Supports camera integration, including Realsense cameras.
 - Provides a wrapper for ROS integration and additional functionality.
 
