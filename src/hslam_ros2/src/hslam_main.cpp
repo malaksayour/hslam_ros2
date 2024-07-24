@@ -48,7 +48,9 @@ void interruptHandler(int signal)
 {
 		if(executor){
 			std::cout<<"exiting"<<std::endl;
-			executor->cancel();}
+			executor->cancel();
+			std::cout<<"executor canceled"<<std::endl;
+}
 		//exit(1);
 }
 
@@ -385,9 +387,10 @@ int main( int argc, char ** argv){
 	executor->spin();
 
 
+	printf("fslam_ros main cpp has been interuppted.\n"); //debug NA
+	printf("waiting till mapping is finished\n"); //debug NA
 	sharedHslamNode->fullSystem->blockUntilLoopIsFinished();
 
-	printf("fslam_ros main cpp has been interuppted.\n"); //debug NA
 	sharedHslamNode->fullSystem->BAatExit();
 			
 	

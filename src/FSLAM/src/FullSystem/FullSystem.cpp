@@ -1791,8 +1791,9 @@ void FullSystem::mapPoints(){
 	boost::unique_lock<boost::mutex> lock(trackMapSyncMutex);
 	while(unmappedTrackedFrames.size()==0)
 	{
-		trackedFrameSignal.wait(lock);
-		if(!runMapping) return;
+		//trackedFrameSignal.wait(lock);
+		return;
+		//if(!runMapping) return;
 	}
 
 	FrameHessian* fh = unmappedTrackedFrames.front();
