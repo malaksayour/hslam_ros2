@@ -33,6 +33,8 @@ find_package(DBoW3 REQUIRED) #PATHS  $ENV{WORKSPACE_DIR}/src/FSLAM/Thirdparty/Co
 # optional libraries
 find_package(LibZip QUIET)
 find_package(Pangolin 0.2 QUIET)# PATHS  $ENV{WORKSPACE_DIR}/src/FSLAM/Thirdparty/CompiledLibs)
+#pcl libraries
+find_package(PCL REQUIRED)
 
 
 # flags
@@ -97,6 +99,8 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/Thirdparty/sse2neon
   ${EIGEN3_INCLUDE_DIR}
   ${G2O_INCLUDE_DIR}
+  ${PCL_INCLUDE_DIRS}
+
 ) 
 
 
@@ -164,6 +168,7 @@ set(LIBS
   ${Pangolin_LIBRARIES}
   ${DBoW3_LIB_DIR}/libDBoW3.so
   ${BOOST_THREAD_LIBRARY}
+  ${PCL_LIBRARIES}
   boost_system
   cxsparse
   cholmod

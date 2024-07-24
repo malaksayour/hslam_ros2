@@ -392,7 +392,8 @@ int main( int argc, char ** argv){
 			
 	
 	sharedHslamNode->fullSystem->printResult("result.txt"); 
-	
+	sharedHslamNode->fullSystem->saveMap("map.pcd"); 
+
 	printf("EXIT NOW\n");
 	rclcpp::shutdown();
 	return 0;
